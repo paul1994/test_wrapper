@@ -1,0 +1,52 @@
+---
+driver:
+  name: ec2
+  # aws_ssh_key_id:  pbradford_aws
+  # set to use a named profile
+  # shared_credentials_profile: success-engineering
+  region: us-west-2
+  availability_zone: a
+  security_group_ids: ["sg-0743bbb8cae7dd2e5"]
+  subnet_id: subnet-7424b611
+  # image_id: ami-8db945ed
+  instance_type: t2.small
+  tags:
+     created-by : "pbradford"
+     Name : "pbtestserver"
+     OwnerEmail : "pbradford@chef.io" 
+provisioner:
+  name: chef_zero
+  # You may wish to disable always updating cookbooks in CI or other testing environments.
+  # For example:
+  #   always_update_cookbooks: <%= !ENV['CI'] %>
+  always_update_cookbooks: true
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: ubuntu-16.04
+  - name: centos-6
+
+suites:
+  - name: default
+    run_list:
+      - recipe[training::default]
+      - recipe[training::users]
+    verifier:
+      inspec_tests:
+        - test/integration/default
+    attributes:
+      chef_vault:
+        databags_fallback: true
+    data_bags_path: "/Users/p.bradford/workspace/chef-repo/data_bags"
+    # data_bags_path: "test/integration/default/data_bags"
+    encrypted_data_bag_secret_key_path: "~/workspace/chef-repo/secrets/chef_shared"
+    # encrypted_data_bag_secret_key_path: "test/integration/default/chef_shared"
+
+
+# transport:
+#  compression: true 
+#  connection_timeout: 5
+#  ssh_key: ~/Downloads/pbradford_aws.pem
+ 

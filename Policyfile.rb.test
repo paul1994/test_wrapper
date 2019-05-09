@@ -10,7 +10,7 @@ name 'test_wrapper'
 default_source :supermarket
 
 # run_list: chef-client will run these recipes in the order specified.
-run_list 'test_wrapper::default'
+run_list 'test_wrapper::lcd_web'
 
 # Specify a custom source for a single cookbook:
 cookbook 'test_wrapper', path: '.'
